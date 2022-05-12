@@ -8814,3 +8814,76 @@ function et_divi_oembed_dataparse_remove_yt_frameborder( $html, $data, $url ) {
 	return $html;
 }
 add_filter( 'oembed_dataparse', 'et_divi_oembed_dataparse_remove_yt_frameborder', 10, 3 );
+
+
+function search_distributor() {
+	ob_start();
+	$distributors = get_posts(array(
+		'post_type' => 'distributor',
+		'numberposts' => -1,
+		'meta_query' => array(
+			'relation' => 'OR',
+			array(
+				'key' => 'name',
+				'value' => sanitize_text_field( $_POST['keyword'] ),
+				'compare' => 'LIKE'
+			),
+			array(
+				'key' => 'address',
+				'value' => sanitize_text_field( $_POST['keyword'] ),
+				'compare' => 'LIKE'
+			),
+			array(
+				'key' => 'city',
+				'value' => sanitize_text_field( $_POST['keyword'] ),
+				'compare' => 'LIKE'
+			),
+			array(
+				'key' => 'state',
+				'value' => sanitize_text_field( $_POST['keyword'] ),
+				'compare' => 'LIKE'
+			),
+			array(
+				'key' => 'zip',
+				'value' => sanitize_text_field( $_POST['keyword'] ),
+				'compare' => 'LIKE'
+			),
+			array(
+				'key' => 'phone',
+				'value' => sanitize_text_field( $_POST['keyword'] ),
+				'compare' => 'LIKE'
+			)
+		)
+	));
+	$distributors_data = [];
+	$distributor_index = 0;
+	foreach($distributors as $distributor) {
+		?>
+		<div class="distributor-row" data-index="<?php echo $distributor_index?>">
+			<h4 class="distributor-name"><?php echo get_field('name', $distributor->ID)?></h4>
+			<div class="distributor-address"><?php echo get_field('address', $distributor->ID)?></div>
+			<div class="distributor-address"><?php echo get_field('city', $distributor->ID)?> <?php echo get_field('state', $distributor->ID)?> <?php echo get_field('zip', $distributor->ID)?></div>
+			<div class="distributor-phone">Phone <a href="tel:<?php echo get_field('phone', $distributor->ID)?>"><?php echo get_field('phone', $distributor->ID)?></a></div>
+		</div>
+		<?php
+		$distributors_data[] = array(
+			'index' => $distributor_index,
+			'name' => get_field('name', $distributor->ID),
+			'address' => get_field('address', $distributor->ID),
+			'city' => get_field('city', $distributor->ID),
+			'state' => get_field('state', $distributor->ID),
+			'phone' => get_field('phone', $distributor->ID),
+		);
+		$distributor_index++;
+	}
+	$distributors_list_html = ob_get_contents();
+	ob_end_clean();
+	echo json_encode(array(
+		'distributors_list_html' => $distributors_list_html,
+		'distributors' => $distributors_data
+	));
+	die();
+}
+
+add_action("wp_ajax_search_distributor", "search_distributor");
+add_action("wp_ajax_nopriv_search_distributor", "search_distributor");
