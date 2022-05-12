@@ -54,7 +54,7 @@ $is_page_builder_used = et_pb_is_pagebuilder_used( get_the_ID() );
 					<div class="entry-content">						
 						<div class="et_pb_row et_pb_row_1 et_pb_gutters3 et_pb_row_1-4_1-2_1-4">
 							<div class="search-wrap">
-								<input type="text" class="" name="search" id="search">
+								<input type="text" class="" name="search" id="search" placeholder="Search by name, address or zip code">
 								<span class="custom-btn" id="btn_search">Search</span>
 							</div>
 							<div class="map-wrap">
@@ -159,12 +159,17 @@ body.custom-background {
 	margin-bottom: 5px;
 	border-radius: 3px;
 	padding: 10px;
+	cursor: pointer;
 }
 
 .distributor-name {
 	font-weight: bold;
 }
 
+.distributor-address,
+.distributor-phone {
+	font-style: italic;
+}
 </style>
 <script>
 
@@ -197,7 +202,7 @@ function initMap() {
 					position: results[0].geometry.location
 				});
 
-				marker.addListener("click", (e) => {
+				marker.addListener("mouseover", (e) => {
 					var contentString = '<div class="map-info-content">' +
 						'<h6 class="map-info-name"><?php echo get_field('name', $distributor->ID) ?></h6>' + 
 						'<div class="map-info-address"><?php echo get_field('address', $distributor->ID)?></div>' + 
@@ -237,14 +242,14 @@ function initMap() {
 	
 	jQuery(document).on('click', '.distributor-row', function() {
 		var index = jQuery(this).attr('data-index');
-		google.maps.event.trigger(markers[index], 'click');
+		google.maps.event.trigger(markers[index], 'mouseover');
 	})
 
-	jQuery(document).on('click', '#btn_search', function() {
+	function search() {
 		if($('#search').val() == '') {
 			return;
 		}
-
+		
 		jQuery.ajax({
 			url: '<?php echo admin_url('admin-ajax.php')?>',
 			type: 'post',
@@ -273,7 +278,7 @@ function initMap() {
 								position: results[0].geometry.location
 							});
 							
-							marker.addListener("click", (e) => {
+							marker.addListener("mouseover", (e) => {
 								var contentString = '<div class="map-info-content">' +
 									'<h6 class="map-info-name">' + distributor['name'] + '</h6>' + 
 									'<div class="map-info-address">' + distributor['address'] + '</div>' + 
@@ -309,6 +314,16 @@ function initMap() {
 				})
 			}
 		})
+	}
+
+	$('#search').keydown(function(event){
+		if (event.which == 13){
+			search();
+		}
+	});
+
+	jQuery(document).on('click', '#btn_search', function() {
+		search();
 	})
 }
 
