@@ -72,10 +72,12 @@ $is_page_builder_used = et_pb_is_pagebuilder_used( get_the_ID() );
 									foreach($distributors as $distributor) {
 										?>
 										<div class="distributor-row" data-index="<?php echo $distributor_index?>">
-											<h4 class="distributor-name"><?php echo get_field('name', $distributor->ID)?></h4>
+											<h4 class="distributor-name"><?php echo get_field('name', $distributor->ID)?>&nbsp; <?php echo get_field('company', $distributor->ID)?></h4>
 											<div class="distributor-address"><?php echo get_field('address', $distributor->ID)?></div>
 											<div class="distributor-address"><?php echo get_field('city', $distributor->ID)?> <?php echo get_field('state', $distributor->ID)?> <?php echo get_field('zip', $distributor->ID)?></div>
 											<div class="distributor-phone">Phone <a href="tel:<?php echo get_field('phone', $distributor->ID)?>"><?php echo get_field('phone', $distributor->ID)?></a></div>
+											<div class="distributor-phone">Fax <a href="#"><?php echo get_field('fax', $distributor->ID)?></a></div>
+											<div class="distributor-address"><?php echo get_field('branch_manager', $distributor->ID)?></div>
 										</div>
 										<?php
 										$distributor_index++;
@@ -155,7 +157,7 @@ body.custom-background {
 }
 
 .distributor-row {
-    border: 1px solid rgba(0,0,0,.05);
+    border: 1px solid rgba(0,0,0,.35);
 	margin-bottom: 5px;
 	border-radius: 3px;
 	padding: 10px;

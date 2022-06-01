@@ -8852,6 +8852,21 @@ function search_distributor() {
 				'key' => 'phone',
 				'value' => sanitize_text_field( $_POST['keyword'] ),
 				'compare' => 'LIKE'
+			),
+			array(
+				'key' => 'company',
+				'value' => sanitize_text_field( $_POST['keyword'] ),
+				'compare' => 'LIKE'
+			),
+			array(
+				'key' => 'fax',
+				'value' => sanitize_text_field( $_POST['keyword'] ),
+				'compare' => 'LIKE'
+			),
+			array(
+				'key' => 'branch_manager',
+				'value' => sanitize_text_field( $_POST['keyword'] ),
+				'compare' => 'LIKE'
 			)
 		)
 	));
@@ -8860,10 +8875,12 @@ function search_distributor() {
 	foreach($distributors as $distributor) {
 		?>
 		<div class="distributor-row" data-index="<?php echo $distributor_index?>">
-			<h4 class="distributor-name"><?php echo get_field('name', $distributor->ID)?></h4>
+			<h4 class="distributor-name"><?php echo get_field('name', $distributor->ID)?>&nbsp; <?php echo get_field('company', $distributor->ID)?></h4>
 			<div class="distributor-address"><?php echo get_field('address', $distributor->ID)?></div>
 			<div class="distributor-address"><?php echo get_field('city', $distributor->ID)?> <?php echo get_field('state', $distributor->ID)?> <?php echo get_field('zip', $distributor->ID)?></div>
 			<div class="distributor-phone">Phone <a href="tel:<?php echo get_field('phone', $distributor->ID)?>"><?php echo get_field('phone', $distributor->ID)?></a></div>
+			<div class="distributor-phone">Fax <a href="#"><?php echo get_field('fax', $distributor->ID)?></a></div>
+			<div class="distributor-address"><?php echo get_field('branch_manager', $distributor->ID)?></div>
 		</div>
 		<?php
 		$distributors_data[] = array(
@@ -8873,6 +8890,9 @@ function search_distributor() {
 			'city' => get_field('city', $distributor->ID),
 			'state' => get_field('state', $distributor->ID),
 			'phone' => get_field('phone', $distributor->ID),
+			'company' => get_field('company', $distributor->ID),
+			'fax' => get_field('fax', $distributor->ID),
+			'branch_manager' => get_field('branch_manager', $distributor->ID),
 		);
 		$distributor_index++;
 	}
